@@ -1,0 +1,7 @@
+# Add upstream DNS and no-resolv option
+server=1.1.1.1
+no-resolv
+
+# Configure DHCP for bat0 iface
+interface=bat0
+dhcp-range=172.20.50.10,172.20.50.253,255.255.255.0,8h

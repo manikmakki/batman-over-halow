@@ -1,0 +1,32 @@
+- name: Restart Networking
+  ansible.builtin.service:
+    name: networking
+    state: restarted
+    enabled: true
+  become: true
+  listen: Restart Networking
+  async: 120
+  poll: 0
+  register: net_restarting
+
+- name: Restart dnsmasq
+  ansible.builtin.service:
+    name: dnsmasq
+    state: restarted
+  become: true
+
+- name: Rerun batman-config
+  ansible.builtin.command:
+    cmd: /etc/network/batman-config.sh
+  poll: 0
+  async: 1
+  become: true
+  when: allowReconfig
+
+# - name: Check Restart Networking Job
+#   async_status:
+#     jid: "{{ net_restarting.ansible_job_id }}"
+#   register: async_poll_results
+#   until: async_poll_results.finished
+#   retries: 30
+#   listen: Restart Networking

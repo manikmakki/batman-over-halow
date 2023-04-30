@@ -1,0 +1,49 @@
+- name: enable ipv4 forward
+  ansible.builtin.lineinfile:
+    path: /etc/sysctl.conf
+    regexp: .*net.ipv4.ip_forward=1.*
+    line: net.ipv4.ip_forward=1
+  become: true
+
+- name: Set hostname
+  ansible.builtin.hostname:
+    name: "{{ inventory_hostname }}"
+  become: true
+
+- name: Add hostname to /etc/hosts
+  ansible.builtin.lineinfile:
+    path: /etc/hosts
+    regexp: ^127.*
+    line: 127.0.0.1 localhost {{ inventory_hostname }}
+  become: true
+
+- name: Template Interfaces
+  ansible.builtin.template:
+    src: templates/gateway-interfaces.j2
+    dest: /etc/network/interfaces
+  notify: Restart Networking
+  become: true
+
+# - name: Install packages
+#   ansible.builtin.package:
+#     name: "{{ item }}"
+#     state: present
+#   loop:
+#     - bridge-utils
+#     - batctl
+#   become: true
+
+- name: Template BATMAN Script
+  ansible.builtin.template:
+    src: templates/batman-config-gateway.j2
+    dest: /etc/network/batman-config.sh
+    mode: 0744
+  notify: Rerun batman-config
+  become: true
+
+- name: Template dnsmasq for mesh
+  ansible.builtin.template:
+    src: templates/dnsmasq.conf.j2
+    dest: /etc/dnsmasq.conf
+  notify: Restart dnsmasq
+  become: true

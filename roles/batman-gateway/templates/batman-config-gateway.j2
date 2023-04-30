@@ -1,0 +1,15 @@
+#!/bin/bash
+modprobe nrc  hifspeed=20000000 spi_bus_num=0 spi_cs_num=0 spi_gpio_irq=5 spi_polling_interval=0 fw_name=uni_s1g.bin power_save=0 auto_ba=1 sw_enc=1 listen_interval=1000 credit_ac_be=40
+sleep 5
+iw dev wlan0 del
+iw dev {{ iface_adhoc_name }} del
+iw phy nrc80211 interface add {{ iface_adhoc_name }} type mp
+iw dev mesh0 set channel {{ adhoc_net_channel }}
+#ifconfig {{ iface_adhoc_name }} {{ ansible_host }}
+ip link set up mtu {{ adhoc_net_mtu }} dev {{ iface_adhoc_name }}
+iw dev {{ iface_adhoc_name }} mesh join {{ adhoc_net_name }}
+batctl if add {{ iface_adhoc_name }}
+batctl gw_mode server {{ iface_wan_speed | default("") }}
+
+# enable masquerade on WAN interface, i.e. allow outbound traffic
+iptables -t nat -A POSTROUTING -o {{ iface_wan_name }} -j MASQUERADE

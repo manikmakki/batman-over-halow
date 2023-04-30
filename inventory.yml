@@ -1,0 +1,42 @@
+all:
+  vars:
+    adhoc_net_name: mesh-network-ssid
+    adhoc_net_mtu: 1532
+    adhoc_net_channel: 165
+  hosts: 
+    batman-gateway01: 
+      ansible_host: 192.168.1.2
+      ansible_ssh_user: pi
+      ansible_sudo_pass: 'raspberry'
+      iface_adhoc_name: mesh0
+      iface_wan_name: eth0
+      allowReconfig: true
+    
+    batman-ap01:
+      ansible_host: batman-ap01
+      ansible_ssh_user: pi
+      ansible_sudo_pass: 'raspberry'
+      ssh_args: -J pi@192.168.1.2 pi@batman-ap01
+      iface_adhoc_name: mesh0
+      iface_lan_name: eth0
+      allowReconfig: true
+    
+    batman-ap02:
+      ansible_host: batman-ap02
+      ansible_ssh_user: pi
+      ansible_sudo_pass: 'raspberry'
+      ssh_args: -J pi@192.168.1.2 pi@batman-ap02
+      iface_adhoc_name: mesh0
+      iface_lan_name: eth0
+      allowReconfig: false
+
+batman-gateway:
+  hosts:
+    batman-gateway01:
+batman-ap:
+  hosts:
+    batman-ap01:
+    batman-ap02:
+
+
+

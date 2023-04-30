@@ -1,0 +1,7 @@
+# Add upstream DNS and no-resolv option
+server=172.20.50.1
+no-resolv
+
+# Configure DHCP for eth0 iface
+interface=eth0
+dhcp-range=192.168.1.2,192.168.1.253,255.255.255.0,8h

@@ -1,0 +1,33 @@
+# This file describes the network interfaces available on your system
+# and how to activate them. For more information, see interfaces(5).
+
+# source /etc/network/interfaces.d/*
+
+# The loopback network interface
+auto lo
+iface lo inet loopback
+
+# LAN Interface - Ethernet
+auto {{ iface_lan_name }}
+iface {{ iface_lan_name }} {{ iface_lan_version | default("inet") }} {{ iface_lan_mode | default("static") }}
+  address 192.168.1.1/24
+  gateway 192.168.1.1
+  nameserver 192.168.1.1
+
+# Ad-Hoc Interface - Wireless 802.11ah
+auto {{ iface_adhoc_name }}
+iface {{ iface_adhoc_name }} {{ iface_adhoc_version | default("inet6") }} {{ iface_lan_mode | default("auto") }}
+
+# BATMAN Interface - Software
+auto {{ iface_bat_name | default("bat0") }}
+iface {{ iface_bat_name | default("bat0") }} {{ iface_bat_version | default("inet") }} {{ iface_bat_mode | default("dhcp") }}
+  pre-up /etc/network/batman-config.sh
+
+# Bridge Interface - Software
+# This interface bridges the ad-hoc wireless interface with the WAN interface and gets DHCP from the WAN if DHCP is running.
+# TODO: Add static IP options, add avahi options, figure out routing
+#auto {{ iface_bridge_name | default("br0") }}
+#iface {{ iface_bridge_name | default("br0") }} {{ iface_bridge_version | default("inet") }} {{ iface_bridge_mode | default("dhcp") }}
+#  bridge-ports {{ iface_bat_name | default("bat0") }}
+#  bridge-stp off
+#  post-up ip link set mtu 1532 dev {{ iface_bridge_name | default("br0") }}

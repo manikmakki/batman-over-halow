@@ -1,0 +1,14 @@
+- name: Include AP role
+  hosts: batman-ap
+  roles:
+    - batman-ap
+  tags:
+    - configure
+  ignore_unreachable: true
+
+- name: Include Gateway Role
+  hosts: batman-gateway
+  roles:
+    - batman-gateway
+  tags:
+    - configure
