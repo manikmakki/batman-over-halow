@@ -10,7 +10,7 @@ all:
       ansible_sudo_pass: 'raspberry'
       iface_adhoc_name: mesh0
       iface_wan_name: eth0
-      allowReconfig: true
+      allowReconfig: false # prevent this host from automatically restarting interfaces
     
     batman-ap01:
       ansible_host: batman-ap01
@@ -28,7 +28,7 @@ all:
       ssh_args: -J pi@192.168.1.2 pi@batman-ap02
       iface_adhoc_name: mesh0
       iface_lan_name: eth0
-      allowReconfig: false
+      allowReconfig: true
 
 batman-gateway:
   hosts:
@@ -37,6 +37,3 @@ batman-ap:
   hosts:
     batman-ap01:
     batman-ap02:
-
-
-
